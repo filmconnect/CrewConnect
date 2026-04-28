@@ -1,15 +1,15 @@
 "use client";
 
-import { useActionState } from "react";
+import { useFormState } from "react-dom";
 import { updateAccount } from "@/actions/settings";
 import Input from "@/components/ui/Input";
-import Button from "@/components/ui/Button";
+import SubmitButton from "@/components/ui/SubmitButton";
 import type { ActionResult } from "@/types";
 
 const initialState: ActionResult = { success: false };
 
 export default function AccountSection({ email }: { email: string }) {
-  const [state, formAction, isPending] = useActionState(updateAccount, initialState);
+  const [state, formAction] = useFormState(updateAccount, initialState);
 
   return (
     <section>
@@ -39,9 +39,9 @@ export default function AccountSection({ email }: { email: string }) {
           <p className="text-[13px] text-[#C44B4B]">{state.error}</p>
         ) : null}
 
-        <Button type="submit" variant="primary" loading={isPending}>
+        <SubmitButton variant="primary">
           Update account
-        </Button>
+        </SubmitButton>
       </form>
     </section>
   );

@@ -1,12 +1,12 @@
 "use client";
 
-import { useActionState } from "react";
+import { useFormState } from "react-dom";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Suspense } from "react";
 import { resetPassword } from "@/actions/auth";
-import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
+import SubmitButton from "@/components/ui/SubmitButton";
 import Logo from "@/components/layout/Logo";
 import type { ActionResult } from "@/types";
 
@@ -15,7 +15,7 @@ const initialState: ActionResult = { success: false };
 function ResetForm() {
   const searchParams = useSearchParams();
   const token = searchParams.get("token") || "";
-  const [state, formAction, isPending] = useActionState(resetPassword, initialState);
+  const [state, formAction] = useFormState(resetPassword, initialState);
 
   if (!token) {
     return (
@@ -57,9 +57,9 @@ function ResetForm() {
         <p className="text-[13px] text-[#C44B4B] text-center">{state.error}</p>
       ) : null}
 
-      <Button type="submit" variant="gold" fullWidth loading={isPending}>
+      <SubmitButton variant="gold" fullWidth>
         Reset password
-      </Button>
+      </SubmitButton>
     </form>
   );
 }

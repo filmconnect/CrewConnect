@@ -1,8 +1,9 @@
 "use client";
 
-import { useActionState, useState, useMemo } from "react";
+import { useState, useMemo } from "react";
+import { useFormState } from "react-dom";
 import { sendRequest } from "@/actions/send-request";
-import Button from "@/components/ui/Button";
+import SubmitButton from "@/components/ui/SubmitButton";
 import Input from "@/components/ui/Input";
 import type { ActionResult } from "@/types";
 
@@ -23,7 +24,7 @@ export default function BookingForm({
   defaultRate,
   crewRole,
 }: BookingFormProps) {
-  const [state, formAction, isPending] = useActionState(sendRequest, initialState);
+  const [state, formAction] = useFormState(sendRequest, initialState);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [rate, setRate] = useState(defaultRate?.toString() || "");
@@ -209,9 +210,9 @@ export default function BookingForm({
       ) : null}
 
       {/* Submit */}
-      <Button type="submit" variant="gold" fullWidth loading={isPending}>
+      <SubmitButton variant="gold" fullWidth>
         Send booking request
-      </Button>
+      </SubmitButton>
 
       <p className="text-[12px] text-[#888] text-center">
         {crewName.split(" ")[0]} will receive your request and can accept or decline.

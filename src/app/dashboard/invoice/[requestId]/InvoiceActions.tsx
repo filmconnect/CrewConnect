@@ -1,9 +1,8 @@
 "use client";
 
-import { useActionState } from "react";
+import { useFormState } from "react-dom";
 import { generateInvoice } from "@/actions/invoice";
 import Input from "@/components/ui/Input";
-import Button from "@/components/ui/Button";
 import type { ActionResult } from "@/types";
 
 interface InvoiceActionsProps {
@@ -23,7 +22,7 @@ export default function InvoiceActions({
   defaultInvoiceNumber,
   producerEmail,
 }: InvoiceActionsProps) {
-  const [state, formAction, isPending] = useActionState(generateInvoice, initialState);
+  const [state, formAction] = useFormState(generateInvoice, initialState);
 
   return (
     <div className="mt-6 space-y-4">

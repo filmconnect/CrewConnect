@@ -1,17 +1,17 @@
 "use client";
 
-import { useActionState } from "react";
+import { useFormState } from "react-dom";
 import Link from "next/link";
 import { forgotPassword } from "@/actions/auth";
-import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
+import SubmitButton from "@/components/ui/SubmitButton";
 import Logo from "@/components/layout/Logo";
 import type { ActionResult } from "@/types";
 
 const initialState: ActionResult = { success: false };
 
 export default function ForgotPasswordPage() {
-  const [state, formAction, isPending] = useActionState(forgotPassword, initialState);
+  const [state, formAction] = useFormState(forgotPassword, initialState);
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -63,9 +63,9 @@ export default function ForgotPasswordPage() {
                 <p className="text-[13px] text-[#C44B4B] text-center">{state.error}</p>
               ) : null}
 
-              <Button type="submit" variant="gold" fullWidth loading={isPending}>
+              <SubmitButton variant="gold" fullWidth>
                 Send reset link
-              </Button>
+              </SubmitButton>
             </form>
           )}
 

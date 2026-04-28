@@ -1,9 +1,10 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useState } from "react";
+import { useFormState } from "react-dom";
 import { updateInvoiceDetails } from "@/actions/settings";
 import Input from "@/components/ui/Input";
-import Button from "@/components/ui/Button";
+import SubmitButton from "@/components/ui/SubmitButton";
 import type { ActionResult } from "@/types";
 
 interface InvoiceSectionProps {
@@ -24,7 +25,7 @@ export default function InvoiceSection({
   iban,
   paymentTerms,
 }: InvoiceSectionProps) {
-  const [state, formAction, isPending] = useActionState(updateInvoiceDetails, initialState);
+  const [state, formAction] = useFormState(updateInvoiceDetails, initialState);
   const [terms, setTerms] = useState(paymentTerms);
 
   return (
@@ -91,9 +92,9 @@ export default function InvoiceSection({
           <p className="text-[13px] text-[#C44B4B]">{state.error}</p>
         ) : null}
 
-        <Button type="submit" variant="primary" loading={isPending}>
+        <SubmitButton variant="primary">
           Save invoice details
-        </Button>
+        </SubmitButton>
       </form>
     </section>
   );

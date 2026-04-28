@@ -1,6 +1,7 @@
 "use client";
 
-import { useActionState, useTransition, useState, useCallback } from "react";
+import { useTransition, useState, useCallback } from "react";
+import { useFormState } from "react-dom";
 import {
   DndContext,
   closestCenter,
@@ -21,6 +22,7 @@ import { CSS } from "@dnd-kit/utilities";
 import { addClip, removeClip, reorderClips } from "@/actions/clips";
 import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
+import SubmitButton from "@/components/ui/SubmitButton";
 import type { ActionResult } from "@/types";
 
 interface ClipItem {
@@ -43,7 +45,7 @@ export default function ClipsSection({ clips: initialClips, plan }: ClipsSection
   const limit = CLIP_LIMITS[plan] ?? 3;
   const [clips, setClips] = useState(initialClips);
   const remaining = limit - clips.length;
-  const [addState, addAction, isAdding] = useActionState(addClip, initialState);
+  const [addState, addAction] = useFormState(addClip, initialState);
   const [showForm, setShowForm] = useState(false);
   const [isReordering, startReorder] = useTransition();
 
@@ -108,9 +110,9 @@ export default function ClipsSection({ clips: initialClips, plan }: ClipsSection
                 <p className="text-[13px] text-[#C44B4B]">{addState.error}</p>
               ) : null}
               <div className="flex gap-3">
-                <Button type="submit" variant="primary" loading={isAdding}>
+                <SubmitButton variant="primary">
                   Add clip
-                </Button>
+                </SubmitButton>
                 <Button type="button" variant="outline" onClick={() => setShowForm(false)}>
                   Cancel
                 </Button>

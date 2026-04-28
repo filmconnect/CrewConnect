@@ -1,9 +1,11 @@
 "use client";
 
-import { useState, useActionState } from "react";
+import { useState } from "react";
+import { useFormState } from "react-dom";
 import { addBooking } from "@/actions/crew";
 import Modal from "@/components/ui/Modal";
 import Button from "@/components/ui/Button";
+import SubmitButton from "@/components/ui/SubmitButton";
 import Input from "@/components/ui/Input";
 import type { ActionResult } from "@/types";
 
@@ -11,7 +13,7 @@ const initialState: ActionResult = { success: false };
 
 export default function AddBookingModal() {
   const [open, setOpen] = useState(false);
-  const [state, formAction, isPending] = useActionState(addBooking, initialState);
+  const [state, formAction] = useFormState(addBooking, initialState);
 
   return (
     <>
@@ -55,9 +57,9 @@ export default function AddBookingModal() {
           ) : null}
 
           <div className="flex gap-3 mt-2">
-            <Button type="submit" variant="primary" fullWidth loading={isPending}>
+            <SubmitButton variant="primary" fullWidth>
               Add booking
-            </Button>
+            </SubmitButton>
             <Button type="button" variant="outline" fullWidth onClick={() => setOpen(false)}>
               Cancel
             </Button>

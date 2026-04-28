@@ -1,9 +1,11 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useState } from "react";
+import { useFormState } from "react-dom";
 import { updateProfile } from "@/actions/crew";
 import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
+import SubmitButton from "@/components/ui/SubmitButton";
 import type { ActionResult } from "@/types";
 
 interface ProfileData {
@@ -26,7 +28,7 @@ interface ProfileData {
 const initialState: ActionResult = { success: false };
 
 export default function ProfileForm({ profile }: { profile: ProfileData }) {
-  const [state, formAction, isPending] = useActionState(updateProfile, initialState);
+  const [state, formAction] = useFormState(updateProfile, initialState);
   const [rateInclEquip, setRateInclEquip] = useState(profile.rateIncludesEquipment);
   const [avatarPreview, setAvatarPreview] = useState(profile.avatarUrl);
   const [avatarUploading, setAvatarUploading] = useState(false);
@@ -229,9 +231,9 @@ export default function ProfileForm({ profile }: { profile: ProfileData }) {
         <p className="text-[13px] text-[#1A8C5E]">Profile saved!</p>
       ) : null}
 
-      <Button type="submit" variant="gold" loading={isPending}>
+      <SubmitButton variant="gold">
         Save profile
-      </Button>
+      </SubmitButton>
     </form>
   );
 }

@@ -1,9 +1,10 @@
 "use client";
 
-import { useActionState, useTransition, useState } from "react";
+import { useTransition, useState } from "react";
+import { useFormState } from "react-dom";
 import { addCredit, removeCredit } from "@/actions/credits";
 import Input from "@/components/ui/Input";
-import Button from "@/components/ui/Button";
+import SubmitButton from "@/components/ui/SubmitButton";
 import type { ActionResult } from "@/types";
 
 interface CreditItem {
@@ -42,7 +43,7 @@ export default function CreditsSection({
   defaultRole,
 }: CreditsSectionProps) {
   const [showAll, setShowAll] = useState(false);
-  const [addState, addAction, isAdding] = useActionState(addCredit, initialState);
+  const [addState, addAction] = useFormState(addCredit, initialState);
 
   const displayedCredits = showAll ? credits : credits.slice(0, 4);
 
@@ -126,9 +127,9 @@ export default function CreditsSection({
               required
             />
           </div>
-          <Button type="submit" variant="primary" loading={isAdding}>
+          <SubmitButton variant="primary">
             Add credit
-          </Button>
+          </SubmitButton>
         </form>
         {addState.error ? (
           <p className="text-[13px] text-[#C44B4B] mt-2">{addState.error}</p>
