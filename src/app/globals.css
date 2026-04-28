@@ -1,0 +1,47 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-primary: #111111;
+  --color-secondary: #888888;
+  --color-border: #EEEEEE;
+  --color-surface: #FAFAFA;
+  --color-gold: #DBA508;
+  --color-gold-light: #FFF8E1;
+  --color-gold-text: #8B6508;
+  --color-confirmed: #1A8C5E;
+  --color-danger: #C44B4B;
+}
+
+@layer base {
+  body {
+    @apply font-sans text-primary antialiased;
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  h1 {
+    @apply text-h1;
+  }
+
+  h2 {
+    @apply text-h2;
+  }
+}
+
+@layer components {
+  .label {
+    @apply text-label uppercase tracking-[0.5px] text-secondary;
+  }
+
+  .divider-or {
+    @apply flex items-center gap-4 text-secondary text-small italic;
+  }
+
+  .divider-or::before,
+  .divider-or::after {
+    content: '';
+    @apply flex-1 h-px bg-border;
+  }
+}
