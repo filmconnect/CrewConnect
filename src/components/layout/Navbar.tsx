@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Logo from "./Logo";
+import { logout } from "@/actions/auth";
 import type { SessionUser } from "@/types";
 
 interface NavbarProps {
@@ -27,6 +28,14 @@ export default function Navbar({ user }: NavbarProps) {
               <div className="w-8 h-8 rounded-full bg-[#111] text-white flex items-center justify-center text-[12px] font-bold uppercase">
                 {getInitials(user.name || user.email)}
               </div>
+              <form action={logout}>
+                <button
+                  type="submit"
+                  className="text-nav text-[#888] hover:text-[#111] transition-colors"
+                >
+                  Log out
+                </button>
+              </form>
             </div>
           ) : (
             <>
