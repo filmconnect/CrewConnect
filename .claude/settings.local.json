@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -s -I \"http://localhost:3000/dashboard\")",
+      "Bash(npm run *)",
+      "Bash(npx prisma *)",
+      "Bash(npx tsx *)",
+      "Bash(curl -s \"http://localhost:3000/\")",
+      "Bash(tasklist)",
+      "Bash(netstat -ano)",
+      "Bash(taskkill //F //IM node.exe)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)"
+    ]
+  }
+}
