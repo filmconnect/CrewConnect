@@ -1,6 +1,5 @@
 import Link from "next/link";
 import Logo from "@/components/layout/Logo";
-import Button from "@/components/ui/Button";
 
 export default function NotFound() {
   return (
@@ -20,8 +19,11 @@ export default function NotFound() {
           <p className="text-[14px] text-[#888] mb-8 max-w-sm">
             The page you&apos;re looking for doesn&apos;t exist or has been moved.
           </p>
-          <Link href="/">
-            <Button variant="gold">Back to home</Button>
+          <Link
+            href="/"
+            className="inline-flex items-center justify-center rounded-md px-5 py-3 text-[14px] font-bold bg-[#DBA508] text-[#111] hover:bg-[#c99507] transition-colors duration-150"
+          >
+            Back to home
           </Link>
         </div>
       </main>

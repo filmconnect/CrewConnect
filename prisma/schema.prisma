@@ -87,7 +87,7 @@ model CrewProfile {
   createdAt             DateTime  @default(now())
   updatedAt             DateTime  @updatedAt
 
-  user            User             @relation(fields: [userId], references: [id])
+  user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
   clips           VideoClip[]
   credits         Credit[]
   bookings        Booking[]
@@ -184,8 +184,8 @@ model BookingRequest {
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
 
-  profile   CrewProfile @relation(fields: [profileId], references: [id])
-  booking   Booking?    @relation(fields: [bookingId], references: [id])
+  profile   CrewProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  booking   Booking?    @relation(fields: [bookingId], references: [id], onDelete: SetNull)
   bookingId String?     @unique
   messages  Message[]
 }
@@ -200,7 +200,7 @@ model Message {
   createdAt        DateTime @default(now())
 
   bookingRequest BookingRequest @relation(fields: [bookingRequestId], references: [id], onDelete: Cascade)
-  sender         User?          @relation(fields: [senderId], references: [id])
+  sender         User?          @relation(fields: [senderId], references: [id], onDelete: SetNull)
 
   @@index([bookingRequestId])
 }
