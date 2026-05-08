@@ -67,7 +67,9 @@ export default function ClipsSection({ clips: initialClips, plan }: ClipsSection
       }));
 
       setClips(newOrder);
-      startReorder(() => reorderClips(newOrder.map((c) => c.id)));
+      startReorder(() => {
+        void reorderClips(newOrder.map((c) => c.id));
+      });
     },
     [clips]
   );
@@ -165,7 +167,9 @@ function SortableClipCard({ clip }: { clip: ClipItem }) {
 
   function handleRemove() {
     if (confirm(`Remove "${clip.title}"?`)) {
-      startTransition(() => removeClip(clip.id));
+      startTransition(() => {
+        void removeClip(clip.id);
+      });
     }
   }
 

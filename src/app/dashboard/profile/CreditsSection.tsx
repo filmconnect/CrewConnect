@@ -143,7 +143,9 @@ function CreditRow({ credit }: { credit: CreditItem }) {
   const [isRemoving, startTransition] = useTransition();
 
   function handleRemove() {
-    startTransition(() => removeCredit(credit.id));
+    startTransition(() => {
+      void removeCredit(credit.id);
+    });
   }
 
   return (

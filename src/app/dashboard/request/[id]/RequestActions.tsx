@@ -25,7 +25,11 @@ export default function RequestActions({
         <Button
           variant="gold"
           className="flex-1"
-          onClick={() => startTransition(() => acceptRequest(requestId))}
+          onClick={() =>
+            startTransition(() => {
+              void acceptRequest(requestId);
+            })
+          }
           loading={isPending}
           disabled={isPending}
         >
@@ -39,7 +43,9 @@ export default function RequestActions({
           className="flex-1"
           onClick={() => {
             if (confirm("Are you sure you want to decline this request?")) {
-              startTransition(() => declineRequest(requestId));
+              startTransition(() => {
+                void declineRequest(requestId);
+              });
             }
           }}
           disabled={isPending}
