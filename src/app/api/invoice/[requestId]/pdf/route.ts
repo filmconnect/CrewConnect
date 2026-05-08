@@ -81,7 +81,7 @@ export async function GET(
 
     logger.info({ requestId, invoiceNumber }, "invoice:pdf_generated");
 
-    return new Response(buffer, {
+    return new Response(new Uint8Array(buffer), {
       headers: {
         "Content-Type": "application/pdf",
         "Content-Disposition": `inline; filename="${invoiceNumber}.pdf"`,
