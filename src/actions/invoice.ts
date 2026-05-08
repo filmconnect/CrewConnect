@@ -15,7 +15,7 @@ const invoiceSchema = z.object({
 });
 
 export async function generateInvoice(
-  _prev: ActionResult,
+  _prev: ActionResult<{ invoiceNumber: string }>,
   formData: FormData
 ): Promise<ActionResult<{ invoiceNumber: string }>> {
   const { userId } = await requireAuth();
