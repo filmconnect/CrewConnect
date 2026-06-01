@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { formatEur, formatDateRange } from "@/lib/format";
 import Badge from "@/components/ui/Badge";
+import AddExternalBooking from "@/components/dashboard/AddExternalBooking";
 import type { BadgeVariant } from "@/types";
 
 interface BookingItem {
@@ -118,13 +119,7 @@ export default function BookingsList({ bookings, pendingRequests }: BookingsList
         })}
 
         {/* Add external booking CTA */}
-        <Link href="#" className="block">
-          <div className="border-2 border-dashed border-[#EEE] rounded-lg p-4 text-center hover:border-[#DBA508] transition-colors">
-            <span className="text-[14px] text-[#DBA508] font-medium">
-              + Add external booking
-            </span>
-          </div>
-        </Link>
+        <AddExternalBooking />
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, type ReactNode } from "react";
 import { useFormState } from "react-dom";
 import { addBooking } from "@/actions/crew";
 import Modal from "@/components/ui/Modal";
@@ -11,15 +11,31 @@ import type { ActionResult } from "@/types";
 
 const initialState: ActionResult = { success: false };
 
-export default function AddBookingModal() {
+interface AddBookingModalProps {
+  trigger?: ReactNode;
+}
+
+export default function AddBookingModal({ trigger }: AddBookingModalProps) {
   const [open, setOpen] = useState(false);
   const [state, formAction] = useFormState(addBooking, initialState);
 
+  useEffect(() => {
+    if (state.success) {
+      setOpen(false);
+    }
+  }, [state]);
+
   return (
     <>
-      <Button variant="outline" onClick={() => setOpen(true)}>
-        + Add
-      </Button>
+      {trigger ? (
+        <div onClick={() => setOpen(true)} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === "Enter") setOpen(true); }}>
+          {trigger}
+        </div>
+      ) : (
+        <Button variant="outline" onClick={() => setOpen(true)}>
+          + Add
+        </Button>
+      )}
 
       <Modal open={open} onClose={() => setOpen(false)} title="Add booking">
         <form action={formAction} className="flex flex-col gap-4">

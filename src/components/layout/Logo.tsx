@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 interface LogoProps {
   href?: string;
@@ -7,13 +8,14 @@ interface LogoProps {
 
 export default function Logo({ href = "/", className = "" }: LogoProps) {
   const logo = (
-    <span
-      className={`text-[17px] font-bold tracking-[-0.6px] select-none ${className}`}
-      style={{ fontStyle: "italic" }}
-    >
-      <span className="text-[#111]">crew</span>
-      <span className="text-[#DBA508]">connect</span>
-    </span>
+    <Image
+      src="/logo.png"
+      alt="CrewConnect"
+      width={140}
+      height={19}
+      className={`select-none ${className}`}
+      priority
+    />
   );
 
   return <Link href={href}>{logo}</Link>;
