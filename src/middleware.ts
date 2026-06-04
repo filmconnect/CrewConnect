@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { jwtVerify } from "jose";
 
-const PROTECTED_PATHS = ["/dashboard"];
+const CREW_PROTECTED = ["/dashboard"];
+const PRODUCER_PROTECTED = ["/producers/home", "/producers/search", "/producers/saved", "/producers/bookings"];
 
 function getJwtSecret(): Uint8Array {
   const secret = process.env.JWT_SECRET;
@@ -12,28 +13,54 @@ function getJwtSecret(): Uint8Array {
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  const isProtected = PROTECTED_PATHS.some((p) => pathname.startsWith(p));
-  if (!isProtected) return NextResponse.next();
+  // ── Crew protected routes ──
+  const isCrewProtected = CREW_PROTECTED.some((p) => pathname.startsWith(p));
+  if (isCrewProtected) {
+    const token = request.cookies.get("cc_session")?.value;
+    if (!token) {
+      const loginUrl = new URL("/auth/login", request.url);
+      loginUrl.searchParams.set("redirect", pathname);
+      return NextResponse.redirect(loginUrl);
+    }
 
-  const token = request.cookies.get("cc_session")?.value;
-  if (!token) {
-    console.info(`[middleware] no session token, redirecting to login from ${pathname}`);
-    const loginUrl = new URL("/auth/login", request.url);
-    loginUrl.searchParams.set("redirect", pathname);
-    return NextResponse.redirect(loginUrl);
+    try {
+      await jwtVerify(token, getJwtSecret());
+      return NextResponse.next();
+    } catch {
+      const loginUrl = new URL("/auth/login", request.url);
+      loginUrl.searchParams.set("redirect", pathname);
+      return NextResponse.redirect(loginUrl);
+    }
   }
 
-  try {
-    await jwtVerify(token, getJwtSecret());
-    return NextResponse.next();
-  } catch (err) {
-    console.warn(`[middleware] invalid/expired token for ${pathname}`, err);
-    const loginUrl = new URL("/auth/login", request.url);
-    loginUrl.searchParams.set("redirect", pathname);
-    return NextResponse.redirect(loginUrl);
+  // ── Producer protected routes ──
+  const isProducerProtected = PRODUCER_PROTECTED.some((p) => pathname.startsWith(p));
+  if (isProducerProtected) {
+    const token = request.cookies.get("cc_producer_session")?.value;
+    if (!token) {
+      return NextResponse.redirect(new URL("/producers/signin", request.url));
+    }
+
+    try {
+      const { payload } = await jwtVerify(token, getJwtSecret());
+      if (payload.type !== "producer") {
+        return NextResponse.redirect(new URL("/producers/signin", request.url));
+      }
+      return NextResponse.next();
+    } catch {
+      return NextResponse.redirect(new URL("/producers/signin", request.url));
+    }
   }
+
+  return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*"],
+  matcher: [
+    "/dashboard/:path*",
+    "/producers/home/:path*",
+    "/producers/search/:path*",
+    "/producers/saved/:path*",
+    "/producers/bookings/:path*",
+  ],
 };

@@ -8,6 +8,7 @@ import logger from "@/lib/logger";
 import Navbar from "@/components/layout/Navbar";
 import VideoCarousel from "@/components/crew/VideoCarousel";
 import AvailabilityStrip from "@/components/crew/AvailabilityStrip";
+import ForProducersLink from "@/components/producers/ForProducersLink";
 import PublicCredits from "@/components/crew/PublicCredits";
 
 interface PageProps {
@@ -291,6 +292,13 @@ export default async function CrewProfilePage({ params, searchParams }: PageProp
           </p>
         </footer>
       ) : null}
+
+      {/* ─── For Producers banner (public view only) ──────── */}
+      {!isPrivate && (
+        <div className="max-w-5xl mx-auto px-6">
+          <ForProducersLink variant="banner" crewName={firstName} />
+        </div>
+      )}
 
       {/* ─── Copyright footer ─────────────────────────────── */}
       <div className="border-t border-[#EEE] py-6">

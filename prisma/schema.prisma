@@ -93,6 +93,7 @@ model CrewProfile {
   bookings        Booking[]
   blockedDates    BlockedDate[]
   bookingRequests BookingRequest[]
+  savedByProducers SavedCrew[]
 }
 
 model VideoClip {
@@ -216,4 +217,87 @@ model Notification {
   createdAt DateTime  @default(now())
 
   @@index([userId, readAt])
+}
+
+// ─── PRODUCER MODELS ───────────────────────────────────────
+
+enum ProducerStatus {
+  REQUESTED
+  INVITED
+  APPROVED
+  REJECTED
+}
+
+model Producer {
+  id           String         @id @default(cuid())
+  email        String         @unique
+  name         String
+  company      String
+  role         String         @default("Producer")
+  website      String?
+  produces     String[]
+  status       ProducerStatus @default(REQUESTED)
+  invitedById  String?
+  passwordHash String?
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+
+  sessions      ProducerSession[]
+  saved         SavedCrew[]
+  searchQueries SearchQuery[]
+}
+
+model ProducerSession {
+  id         String   @id @default(cuid())
+  producerId String
+  token      String   @unique
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+
+  producer Producer @relation(fields: [producerId], references: [id], onDelete: Cascade)
+
+  @@index([token])
+}
+
+model Invite {
+  id         String    @id @default(cuid())
+  email      String
+  token      String    @unique
+  createdBy  String
+  expiresAt  DateTime
+  acceptedAt DateTime?
+  createdAt  DateTime  @default(now())
+}
+
+model SavedCrew {
+  id            String   @id @default(cuid())
+  producerId    String
+  crewProfileId String
+  createdAt     DateTime @default(now())
+
+  producer Producer    @relation(fields: [producerId], references: [id], onDelete: Cascade)
+  crew     CrewProfile @relation(fields: [crewProfileId], references: [id], onDelete: Cascade)
+
+  @@unique([producerId, crewProfileId])
+}
+
+model SearchQuery {
+  id         String       @id @default(cuid())
+  producerId String?
+  rawText    String       @db.Text
+  parsedJson Json
+  createdAt  DateTime     @default(now())
+
+  producer Producer?    @relation(fields: [producerId], references: [id])
+  matches  MatchEvent[]
+}
+
+model MatchEvent {
+  id            String @id @default(cuid())
+  searchQueryId String
+  crewProfileId String
+  score         Int
+  factorsJson   Json
+
+  query SearchQuery @relation(fields: [searchQueryId], references: [id], onDelete: Cascade)
 }

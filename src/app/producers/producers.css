@@ -1,0 +1,313 @@
+/* ─── Producer Area CSS ─────────────────────────────────── */
+/* AI accent: purple. Brand: same gold + black as crew side. */
+
+:root {
+  --color-ai: #7C5CFC;
+  --color-ai-light: #F0ECFF;
+  --color-ai-dark: #5A3FD6;
+  --color-producer-bg: #FAFAFA;
+}
+
+/* ─── Producer Shell ─────────────────────────────────────── */
+
+.producer-shell {
+  min-height: 100vh;
+  background: var(--color-producer-bg);
+}
+
+.producer-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 16px 24px;
+}
+
+.producer-chip {
+  display: inline-block;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--color-ai);
+  border: 1px solid var(--color-ai);
+  border-radius: 4px;
+  padding: 2px 6px;
+  margin-left: 8px;
+  vertical-align: middle;
+}
+
+.producer-nav-tabs {
+  display: flex;
+  gap: 24px;
+}
+
+.producer-nav-tab {
+  font-size: 14px;
+  color: #888;
+  text-decoration: none;
+  padding: 4px 0;
+  border-bottom: 2px solid transparent;
+  transition: all 0.15s;
+}
+
+.producer-nav-tab:hover {
+  color: #111;
+}
+
+.producer-nav-tab.active {
+  color: #111;
+  font-weight: 600;
+  border-bottom-color: var(--color-ai);
+}
+
+/* ─── AI Search ──────────────────────────────────────────── */
+
+.ai-search-input {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: white;
+  border: 2px solid #EEE;
+  border-radius: 12px;
+  padding: 14px 20px;
+  transition: border-color 0.2s;
+}
+
+.ai-search-input:focus-within {
+  border-color: var(--color-ai);
+  box-shadow: 0 0 0 4px var(--color-ai-light);
+}
+
+.ai-search-input input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 15px;
+  background: transparent;
+}
+
+.ai-search-input input::placeholder {
+  color: #BBB;
+}
+
+/* ─── Match Score Ring ───────────────────────────────────── */
+
+.match-ring {
+  position: relative;
+  width: 56px;
+  height: 56px;
+  flex-shrink: 0;
+}
+
+.match-ring svg {
+  transform: rotate(-90deg);
+  width: 56px;
+  height: 56px;
+}
+
+.match-ring-bg {
+  fill: none;
+  stroke: #EEE;
+  stroke-width: 4;
+}
+
+.match-ring-fill {
+  fill: none;
+  stroke-width: 4;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.6s ease;
+}
+
+.match-ring-score {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.match-ring-score .number {
+  font-size: 18px;
+  color: #111;
+}
+
+.match-ring-score .pct {
+  font-size: 10px;
+  color: #888;
+}
+
+.match-ring-score .label {
+  font-size: 7px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--color-ai);
+  margin-top: 2px;
+}
+
+/* ─── Result Card ────────────────────────────────────────── */
+
+.match-card {
+  background: white;
+  border: 1px solid #EEE;
+  border-left: 3px solid var(--color-ai);
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 16px;
+  transition: box-shadow 0.15s;
+}
+
+.match-card:hover {
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+
+/* ─── Explanation Chips ──────────────────────────────────── */
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+
+.chip-ok {
+  background: #E8F5E9;
+  color: #1B5E20;
+}
+
+.chip-warn {
+  background: #FFF8E1;
+  color: #8B6508;
+}
+
+.chip-no {
+  background: #FFEBEE;
+  color: #B71C1C;
+}
+
+.chip-partner {
+  background: var(--color-ai-light);
+  color: var(--color-ai-dark);
+  font-weight: 600;
+}
+
+/* ─── Buttons ────────────────────────────────────────────── */
+
+.btn-ai {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: var(--color-ai);
+  color: white;
+  font-weight: 600;
+  font-size: 14px;
+  padding: 10px 24px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.15s;
+  text-decoration: none;
+}
+
+.btn-ai:hover {
+  background: var(--color-ai-dark);
+}
+
+.btn-ai:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: transparent;
+  color: #111;
+  font-weight: 500;
+  font-size: 14px;
+  padding: 10px 24px;
+  border-radius: 6px;
+  border: 1px solid #DDD;
+  cursor: pointer;
+  transition: all 0.15s;
+  text-decoration: none;
+}
+
+.btn-ghost:hover {
+  border-color: #111;
+}
+
+/* ─── How Match Works ────────────────────────────────────── */
+
+.weight-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.weight-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 4px;
+  background: #F5F5F5;
+  color: #666;
+}
+
+.weight-chip b {
+  color: var(--color-ai);
+}
+
+/* ─── Eyebrow ────────────────────────────────────────────── */
+
+.eyebrow-ai {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--color-ai);
+}
+
+/* ─── For Producers Link/Banner ──────────────────────────── */
+
+.for-producers-banner {
+  background: var(--color-ai-light);
+  border: 1px solid rgba(124, 92, 252, 0.15);
+  border-radius: 8px;
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 32px;
+}
+
+.for-producers-banner p {
+  font-size: 14px;
+  color: #333;
+}
+
+.for-producers-banner a {
+  color: var(--color-ai);
+  font-weight: 600;
+  font-size: 14px;
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.for-producers-banner a:hover {
+  text-decoration: underline;
+}

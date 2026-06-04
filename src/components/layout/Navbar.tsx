@@ -40,6 +40,12 @@ export default function Navbar({ user }: NavbarProps) {
           ) : (
             <>
               <Link
+                href="/producers"
+                className="text-nav text-[#888] hover:text-[#7C5CFC] transition-colors"
+              >
+                For producers →
+              </Link>
+              <Link
                 href="/auth/login"
                 className="text-nav text-[#888] hover:text-[#111] transition-colors"
               >
