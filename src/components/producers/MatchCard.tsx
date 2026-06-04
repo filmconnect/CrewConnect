@@ -44,10 +44,10 @@ export default function MatchCard({ result }: MatchCardProps) {
       <div className="flex items-start justify-between gap-4">
         {/* Left: avatar + info */}
         <div className="flex items-start gap-3">
-          <div className="w-12 h-12 rounded-full bg-[#111] text-white flex items-center justify-center text-[14px] font-bold flex-shrink-0">
+          <div className="relative w-12 h-12 rounded-full bg-[#111] text-white flex items-center justify-center text-[14px] font-bold flex-shrink-0">
             {initials(crew.name)}
             {crew.verified && (
-              <span className="absolute -bottom-0.5 -right-0.5 w-4 h-4 bg-[#DBA508] rounded-full flex items-center justify-center text-[8px]">
+              <span className="absolute -bottom-0.5 -right-0.5 w-4 h-4 bg-[#DBA508] rounded-full flex items-center justify-center text-[8px] text-[#111]">
                 ✓
               </span>
             )}
