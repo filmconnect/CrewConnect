@@ -19,6 +19,16 @@ const addBookingSchema = z.object({
   notes: z.string().optional().default(""),
 });
 
+const editBookingSchema = z.object({
+  bookingId: z.string().min(1),
+  title: z.string().min(1, "Project name is required"),
+  client: z.string().optional().default(""),
+  startDate: z.string().min(1, "Start date is required"),
+  endDate: z.string().min(1, "End date is required"),
+  dayRate: z.coerce.number().min(0).optional(),
+  notes: z.string().optional().default(""),
+});
+
 const blockDatesSchema = z.object({
   dates: z.string().min(1, "At least one date is required"),
   reason: z.string().optional().default(""),
@@ -77,6 +87,61 @@ export async function addBooking(_prev: ActionResult, formData: FormData): Promi
   } catch (err) {
     logger.error({ err }, "crew:add_booking_error");
     return { success: false, error: "Failed to add booking" };
+  }
+}
+
+// ─── Edit Booking ──────────────────────────────────────────
+
+export async function editBooking(_prev: ActionResult, formData: FormData): Promise<ActionResult> {
+  const { userId } = await requireAuth();
+
+  const raw = {
+    bookingId: formData.get("bookingId"),
+    title: formData.get("title"),
+    client: formData.get("client"),
+    startDate: formData.get("startDate"),
+    endDate: formData.get("endDate"),
+    dayRate: formData.get("dayRate"),
+    notes: formData.get("notes"),
+  };
+
+  const parsed = editBookingSchema.safeParse(raw);
+  if (!parsed.success) {
+    return { success: false, error: parsed.error.errors[0].message };
+  }
+
+  const { bookingId, title, client, startDate, endDate, dayRate, notes } = parsed.data;
+
+  try {
+    const booking = await prisma.booking.findUnique({
+      where: { id: bookingId },
+      include: { profile: { select: { userId: true } } },
+    });
+
+    if (!booking || booking.profile.userId !== userId) {
+      return { success: false, error: "Booking not found" };
+    }
+
+    const dayRateCents = dayRate ? Math.round(dayRate * 100) : null;
+
+    await prisma.booking.update({
+      where: { id: bookingId },
+      data: {
+        title,
+        client: client || null,
+        startDate: new Date(startDate),
+        endDate: new Date(endDate),
+        dayRate: dayRateCents,
+        notes: notes || null,
+      },
+    });
+
+    logger.info({ userId, bookingId, title }, "crew:edit_booking");
+    revalidatePath("/dashboard");
+    return { success: true };
+  } catch (err) {
+    logger.error({ err }, "crew:edit_booking_error");
+    return { success: false, error: "Failed to update booking" };
   }
 }
 

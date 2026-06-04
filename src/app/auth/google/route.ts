@@ -22,6 +22,8 @@ export async function GET(request: NextRequest) {
     const tokens = await exchangeCode(code);
     const googleUser = await getUserInfo(tokens.access_token);
 
+    let isNewUser = false;
+
     // Check if user exists by googleId
     let user = await prisma.user.findUnique({
       where: { googleId: googleUser.id },
@@ -66,6 +68,7 @@ export async function GET(request: NextRequest) {
             },
           },
         });
+        isNewUser = true;
         logger.info({ userId: user.id, slug }, "google:signup");
       } else {
         // Login mode but no account exists
@@ -78,7 +81,9 @@ export async function GET(request: NextRequest) {
     await createSession(user.id);
     logger.info({ userId: user.id }, "google:session_created");
 
-    return NextResponse.redirect(new URL("/dashboard", request.url));
+    // New users go to profile to complete their info
+    const redirectPath = isNewUser ? "/dashboard/profile" : "/dashboard";
+    return NextResponse.redirect(new URL(redirectPath, request.url));
   } catch (err) {
     logger.error({ err }, "google:callback_error");
     return NextResponse.redirect(

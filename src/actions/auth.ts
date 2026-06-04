@@ -92,7 +92,7 @@ export async function signup(_prev: ActionResult, formData: FormData): Promise<A
     return { success: false, error: "Something went wrong. Please try again." };
   }
 
-  redirect("/dashboard");
+  redirect("/dashboard/profile");
 }
 
 // ─── Login ─────────────────────────────────────────────────

@@ -16,11 +16,14 @@ import {
   startOfDay,
 } from "date-fns";
 
-interface CalendarBooking {
+export interface CalendarBooking {
   id: string;
   title: string;
+  client: string | null;
   startDate: Date;
   endDate: Date;
+  dayRate: number | null;
+  notes: string | null;
   status: string;
 }
 
@@ -40,11 +43,12 @@ interface CalendarProps {
   bookings: CalendarBooking[];
   blockedDates: CalendarBlocked[];
   pendingRequests: CalendarRequest[];
+  onDateClick?: (date: Date, booking: CalendarBooking | null) => void;
 }
 
 type DayType = "confirmed" | "blocked" | "pending" | "today" | null;
 
-export default function Calendar({ bookings, blockedDates, pendingRequests }: CalendarProps) {
+export default function Calendar({ bookings, blockedDates, pendingRequests, onDateClick }: CalendarProps) {
   const [currentMonth, setCurrentMonth] = useState(new Date());
 
   const today = startOfDay(new Date());
@@ -77,6 +81,21 @@ export default function Calendar({ bookings, blockedDates, pendingRequests }: Ca
     if (isSameDay(d, today)) return "today";
 
     return null;
+  }
+
+  function getBookingForDate(date: Date): CalendarBooking | null {
+    const d = startOfDay(date);
+    return bookings.find(
+      (b) =>
+        b.status === "confirmed" &&
+        isWithinInterval(d, { start: startOfDay(b.startDate), end: startOfDay(b.endDate) })
+    ) || null;
+  }
+
+  function handleDateClick(date: Date, inMonth: boolean) {
+    if (!inMonth || !onDateClick) return;
+    const booking = getBookingForDate(date);
+    onDateClick(date, booking);
   }
 
   const dayColors: Record<string, string> = {
@@ -144,9 +163,10 @@ export default function Calendar({ bookings, blockedDates, pendingRequests }: Ca
                 return (
                   <td key={d.toISOString()} className="text-center py-1.5">
                     <span
+                      onClick={() => handleDateClick(d, inMonth)}
                       className={`
                         inline-flex items-center justify-center w-8 h-8 rounded-full text-[13px]
-                        ${!inMonth ? "text-[#DDD]" : ""}
+                        ${!inMonth ? "text-[#DDD]" : "cursor-pointer hover:ring-2 hover:ring-[#DBA508]/40"}
                         ${type && dayColors[type] ? dayColors[type] : ""}
                       `}
                     >
@@ -163,7 +183,7 @@ export default function Calendar({ bookings, blockedDates, pendingRequests }: Ca
       {/* Legend */}
       <div className="flex items-center gap-5 mt-4">
         <LegendItem color="bg-[#1A8C5E]" label="Confirmed" />
-        <LegendItem color="bg-[#C44B4B]" label="Booked" />
+        <LegendItem color="bg-[#C44B4B]" label="Unavailable" />
         <LegendItem color="bg-[#DBA508]" label="Pending" />
       </div>
     </div>

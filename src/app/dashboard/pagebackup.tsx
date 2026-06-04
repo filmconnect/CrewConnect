@@ -3,9 +3,10 @@ import { prisma } from "@/lib/prisma";
 import { getGreeting } from "@/lib/greeting";
 import { startOfMonth, endOfMonth } from "date-fns";
 import logger from "@/lib/logger";
+import DualLinkBar from "@/components/dashboard/DualLinkBar";
 import StatsCards from "@/components/dashboard/StatsCards";
 import PendingRequestAlert from "@/components/dashboard/PendingRequestAlert";
-import CalendarWithBooking from "@/components/dashboard/CalendarWithBooking";
+import Calendar from "@/components/dashboard/Calendar";
 import BookingsList from "@/components/dashboard/BookingsList";
 import AddBookingModal from "@/components/dashboard/AddBookingModal";
 import OnboardingChecklist from "@/components/dashboard/OnboardingChecklist";
@@ -101,26 +102,32 @@ export default async function DashboardPage() {
 
   return (
     <div className="space-y-6">
-      {/* Greeting */}
-      <div>
-        <h1 className="text-[28px] font-bold tracking-[-0.5px]">
-          <span
-            className="relative inline-block"
-            style={{
-              background:
-                "linear-gradient(180deg, transparent 55%, #DBA508 55%, #DBA508 90%, transparent 90%)",
-            }}
-          >
-            <span className="font-black italic">{greeting}</span>
-          </span>
-          , {firstName}
-        </h1>
-        <p className="text-[14px] text-[#888] mt-1">
-          {confirmedBookings.length} confirmed booking{confirmedBookings.length !== 1 ? "s" : ""}
-          {pendingRequests.length > 0
-            ? ` · ${pendingRequests.length} pending request${pendingRequests.length !== 1 ? "s" : ""}`
-            : ""}
-        </p>
+      {/* Dual link bar */}
+      <DualLinkBar slug={profile.slug} bookingKey={profile.bookingKey} />
+
+      {/* Greeting + Add button */}
+      <div className="flex items-start justify-between">
+        <div>
+          <h1 className="text-[28px] font-bold tracking-[-0.5px]">
+            <span
+              className="relative inline-block"
+              style={{
+                background:
+                  "linear-gradient(180deg, transparent 55%, #DBA508 55%, #DBA508 90%, transparent 90%)",
+              }}
+            >
+              <span className="font-black italic">{greeting}</span>
+            </span>
+            , {firstName}
+          </h1>
+          <p className="text-[14px] text-[#888] mt-1">
+            {confirmedBookings.length} confirmed booking{confirmedBookings.length !== 1 ? "s" : ""}
+            {pendingRequests.length > 0
+              ? ` · ${pendingRequests.length} pending request${pendingRequests.length !== 1 ? "s" : ""}`
+              : ""}
+          </p>
+        </div>
+        <AddBookingModal />
       </div>
 
       {/* Stats */}
@@ -137,14 +144,11 @@ export default async function DashboardPage() {
       {/* Calendar + Bookings */}
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
         <div className="lg:col-span-3">
-          <CalendarWithBooking
+          <Calendar
             bookings={bookings}
             blockedDates={blockedDates}
             pendingRequests={pendingRequests}
           />
-          <div className="flex justify-end -mt-10">
-            <AddBookingModal />
-          </div>
         </div>
         <div className="lg:col-span-2">
           {bookings.length === 0 && pendingRequests.length === 0 ? (

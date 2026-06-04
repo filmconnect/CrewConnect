@@ -1,6 +1,7 @@
 import { requireAuth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import logger from "@/lib/logger";
+import DualLinkBar from "@/components/dashboard/DualLinkBar";
 import ProfileForm from "./ProfileForm";
 import ClipsSection from "./ClipsSection";
 import CreditsSection from "./CreditsSection";
@@ -30,7 +31,9 @@ export default async function ProfileEditPage() {
 
   return (
     <div className="max-w-3xl">
-      <h1 className="text-[24px] font-bold tracking-[-0.5px] mb-8">Your profile</h1>
+      <DualLinkBar slug={profile.slug} bookingKey={profile.bookingKey} />
+
+      <h1 className="text-[24px] font-bold tracking-[-0.5px] mb-8 mt-6">Your profile</h1>
 
       {/* Basic info + Links form */}
       <ProfileForm
