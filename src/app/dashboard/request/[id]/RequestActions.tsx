@@ -1,7 +1,7 @@
 "use client";
 
 import { useTransition } from "react";
-import { acceptRequest, declineRequest } from "@/actions/booking";
+import { acceptRequest, declineRequest, markRequestDone } from "@/actions/booking";
 import { formatEur } from "@/lib/format";
 import Button from "@/components/ui/Button";
 
@@ -18,6 +18,10 @@ export default function RequestActions({
   total,
 }: RequestActionsProps) {
   const [isPending, startTransition] = useTransition();
+
+  function downloadConfirmation() {
+    window.open(`/api/confirmation/${requestId}/pdf`, "_blank");
+  }
 
   if (status === "pending") {
     return (
@@ -59,14 +63,44 @@ export default function RequestActions({
   if (status === "accepted") {
     return (
       <div className="flex items-center gap-3">
-        <Button variant="gold" className="flex-1">
+        <Button
+          variant="gold"
+          className="flex-1"
+          onClick={() => {
+            if (confirm("Mark this booking as done? Wrap date is recorded for invoicing.")) {
+              startTransition(() => {
+                void markRequestDone(requestId);
+              });
+            }
+          }}
+          loading={isPending}
+          disabled={isPending}
+        >
           Mark as done
         </Button>
-        <Button variant="primary" className="flex-1">
+        <Button
+          variant="primary"
+          className="flex-1"
+          onClick={downloadConfirmation}
+        >
           Download confirmation
         </Button>
         <Button variant="danger" className="flex-1">
           Cancel booking
+        </Button>
+      </div>
+    );
+  }
+
+  if (status === "done") {
+    return (
+      <div className="flex items-center gap-3">
+        <Button
+          variant="primary"
+          className="flex-1"
+          onClick={downloadConfirmation}
+        >
+          Download confirmation
         </Button>
       </div>
     );

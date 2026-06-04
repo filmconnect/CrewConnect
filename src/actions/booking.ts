@@ -63,6 +63,43 @@ export async function acceptRequest(requestId: string): Promise<ActionResult> {
   }
 }
 
+// ─── Mark Request as Done ──────────────────────────────────
+
+export async function markRequestDone(requestId: string): Promise<ActionResult> {
+  const { userId } = await requireAuth();
+
+  try {
+    const request = await prisma.bookingRequest.findUnique({
+      where: { id: requestId },
+      include: { profile: { select: { userId: true } } },
+    });
+
+    if (!request || request.profile.userId !== userId) {
+      return { success: false, error: "Request not found" };
+    }
+
+    if (request.status !== "accepted") {
+      return { success: false, error: "Only accepted bookings can be marked done" };
+    }
+
+    await prisma.bookingRequest.update({
+      where: { id: requestId },
+      data: {
+        status: "done",
+        doneAt: new Date(),
+      },
+    });
+
+    logger.info({ userId, requestId }, "booking:marked_done");
+    revalidatePath("/dashboard");
+    revalidatePath(`/dashboard/request/${requestId}`);
+    return { success: true };
+  } catch (err) {
+    logger.error({ err }, "booking:mark_done_error");
+    return { success: false, error: "Failed to mark booking as done" };
+  }
+}
+
 // ─── Decline Request ───────────────────────────────────────
 
 export async function declineRequest(requestId: string): Promise<ActionResult> {
