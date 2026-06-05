@@ -135,9 +135,15 @@ export default function ProducerSearchPage() {
               </button>
             </div>
 
-            {data.results.map((result) => (
+            {data.results.slice(0, 5).map((result) => (
               <MatchCard key={result.crew.id} result={result} />
             ))}
+
+            {data.results.length > 5 && (
+              <p className="text-[13px] text-[#888] text-center mt-4">
+                Showing top 5 of {data.results.length} matches
+              </p>
+            )}
 
             {data.results.length === 0 && (
               <div className="border border-dashed border-[#DDD] rounded-lg p-10 text-center">
