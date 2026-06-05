@@ -37,9 +37,21 @@ Unzip into project root. It will place files in correct directories.
 npx prisma db push
 ```
 
-### 3. Seed test producers
+### 3. Seed test producers + demo crew
 ```powershell
-npx tsx prisma/seed-producers.ts
+npm run db:seed:producers
+```
+This inserts 3 producer accounts (eva, marco, pending) and 20 demo crew
+profiles (5 DPs, 3 gaffers, 2 sound mixers, 2 editors, 2 drone ops, 2
+camera ops, 2 1st ADs, 1 colorist, 1 steadicam op) with credits. It is
+idempotent — re-running upserts producers and refreshes the seed-tagged
+crew data without touching user-added credits or the existing real
+`marko-horvat` profile.
+
+To seed both the original crew test accounts (`marko@example.com`,
+`ana@example.com`) and the producer + demo crew in one go:
+```powershell
+npm run db:seed:all
 ```
 
 ### 4. Add ANTHROPIC_API_KEY (optional, for AI parsing)
@@ -65,3 +77,24 @@ git commit -m "feat: Producers area + AI matching engine"
 git push origin main
 ```
 Add `ANTHROPIC_API_KEY` to Vercel Environment Variables if using LLM parsing.
+
+### 7. Seed the production database
+
+The AI search route always reads from the DB — there is no in-route
+fallback. Production needs the same 20 demo crew + 3 test producers to
+return useful results, so run the seed once against the prod Neon DB:
+
+1. Copy `DATABASE_URL` from Vercel → Project → Settings → Environment
+   Variables (the Neon pooled URL). Optionally also `DIRECT_URL`.
+2. From your local checkout, run the seed with that URL inlined:
+   ```powershell
+   $env:DATABASE_URL = "<prod-neon-pooled-url>"
+   $env:DIRECT_URL   = "<prod-neon-direct-url>"
+   npm run db:seed:producers
+   Remove-Item Env:DATABASE_URL, Env:DIRECT_URL
+   ```
+3. The script logs `19 created, 1 updated, 20 total` for crew and the
+   three producers. Re-run any time to refresh the seed-tagged data.
+
+If you prefer the Vercel CLI flow (`vercel env pull .env.production`),
+just point the script at that env file: `npx dotenv-cli -e .env.production -- npm run db:seed:producers`.
