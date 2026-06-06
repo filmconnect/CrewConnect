@@ -24,7 +24,20 @@
       "Bash(gh --version)",
       "Bash(gh run *)",
       "Bash(gh api *)",
-      "Bash(npx --yes vercel inspect dpl_5pspGQ96nbYfT1JNSDXoAZFnfHpC --logs)"
+      "Bash(npx --yes vercel inspect dpl_5pspGQ96nbYfT1JNSDXoAZFnfHpC --logs)",
+      "Bash(git commit *)",
+      "Bash(git config *)",
+      "Bash(git fetch *)",
+      "Bash(git checkout *)",
+      "Bash(git merge *)",
+      "PowerShell(Start-Process \"https://crewconnect-6lrq6n1id-film-connect-team.vercel.app\")",
+      "Bash(curl *)",
+      "Bash(git ls-remote *)",
+      "PowerShell(Get-NetTCPConnection *)",
+      "PowerShell(Stop-Process *)",
+      "Bash(awk 'NR==1,/^\\\\/\\\\/ ── Seed data fallback/ { if \\(!/^\\\\/\\\\/ ── Seed data fallback/\\) print; else exit } ' src/app/api/producers/search/route.ts)",
+      "Bash(command -v vercel)",
+      "PowerShell(Get-Command *)"
     ]
   }
 }
